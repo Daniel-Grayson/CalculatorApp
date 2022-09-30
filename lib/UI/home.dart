@@ -34,20 +34,42 @@ class UI extends StatefulWidget {
 }
 
 class _UIState extends State<UI> {
-  // String numOne = ;
-  // String numTwo = ;
+  String result = "0";
   String value = "0";
-  void pressOne(String number) {
-    if (value.length > 5) return;
-    if (number == "." && value.contains(".")) return;
-    setState(() => (value == "0" && number != ".")
-        ? value = number
-        : value = value += number);
+
+  pressOne(String number) {
+    setState(() {
+      if (value.length > 3) {
+        // do nothing
+      }
+      if (number == "." && value.contains(".")) {
+        // do nothing
+      } else if (number == "=") {
+        // do nothing
+      } else {
+        if (value == "0" && number != ".") {
+          value = number;
+        } else {
+          value = value + number;
+        }
+      }
+    });
   }
+
+  // void pressOne(String number) {
+  //   if (value.length > 8) return;
+  //   if (number == "." && value.contains(".")) return;
+  //   setState(() => (value == "0" && number != ".")
+  //       ? value = number
+  //       : value = value += number);
+  // }
 
   void ac() => setState(() => value = "0");
   // void add() => setState(() {
-  //       numOne + numTwo;
+  //   int.parse(numOne) + int.parse(numTwo);
+  //   result = add();
+  //   total = result.toString();
+  //       // numOne + numTwo;
   //     });
 
   @override
@@ -301,8 +323,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () {},
-              // => add(),
+              onPressed: () => pressOne("+"),
               child: const Text(
                 "+",
                 style: TextStyle(
@@ -349,6 +370,7 @@ class _UIState extends State<UI> {
           ),
           RaisedButton(
             onPressed: () {},
+            // => add(),
             child: const Text(
               "=",
               style: TextStyle(
