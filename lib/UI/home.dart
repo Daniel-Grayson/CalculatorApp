@@ -39,9 +39,9 @@ class _UIState extends State<UI> {
 
   pressOne(String number) {
     setState(() {
-      if (value.length > 3) {
-        // do nothing
-      }
+      // if (value.length > 3) {
+      //   // do nothing
+      // }
       if (number == "." && value.contains(".")) {
         // do nothing
       } else if (number == "=") {
