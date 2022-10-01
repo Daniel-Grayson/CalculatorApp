@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class SimpleCalculator extends StatelessWidget {
   const SimpleCalculator({Key? key}) : super(key: key);
@@ -34,50 +35,49 @@ class UI extends StatefulWidget {
 }
 
 class _UIState extends State<UI> {
+  // calculator logic
+
   String result = "0";
   String value = "0";
+  String expression = "";
 
-  pressOne(String number) {
+  buttonPressed(String buttonText) {
+    if (value.length > 8) return;
     setState(() {
-      // if (value.length > 3) {
-      //   // do nothing
-      // }
-      if (number == "." && value.contains(".")) {
+      if (buttonText == "." && value.contains(".")) {
         // do nothing
-      } else if (number == "=") {
-        // do nothing
+      } else if (buttonText == "=") {
+        expression = value;
+        expression = expression.replaceAll("x", "*");
+        expression = expression.replaceAll("/", "/");
+        try {
+          Parser p = Parser();
+          Expression exp = p.parse(expression);
+          ContextModel cm = ContextModel();
+          result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+        } catch (e) {
+          result = "Error";
+        }
       } else {
-        if (value == "0" && number != ".") {
-          value = number;
+        if (value == "0" && buttonText != ".") {
+          value = buttonText;
         } else {
-          value = value + number;
+          value = value + buttonText;
         }
       }
     });
   }
 
-  // void pressOne(String number) {
-  //   if (value.length > 8) return;
-  //   if (number == "." && value.contains(".")) return;
-  //   setState(() => (value == "0" && number != ".")
-  //       ? value = number
-  //       : value = value += number);
-  // }
-
-  void ac() => setState(() => value = "0");
-  // void add() => setState(() {
-  //   int.parse(numOne) + int.parse(numTwo);
-  //   result = add();
-  //   total = result.toString();
-  //       // numOne + numTwo;
-  //     });
-
+  void ac() => setState(() {
+        value = "0";
+        result = "0";
+      });
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Row(
+        Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Padding(
@@ -86,7 +86,18 @@ class _UIState extends State<UI> {
                   value,
                   textAlign: TextAlign.left,
                   style: const TextStyle(
-                    fontSize: 90,
+                    fontSize: 100,
+                    // fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: Text(
+                  result,
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                    fontSize: 60,
                     // fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -114,7 +125,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () {},
+              onPressed: () => buttonPressed('+/-'),
               child: const Text(
                 "+/-",
                 style: TextStyle(
@@ -127,7 +138,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () {},
+              onPressed: () => buttonPressed('%'),
               child: const Text(
                 "%",
                 style: TextStyle(
@@ -140,7 +151,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () {},
+              onPressed: () => buttonPressed('/'),
               child: const Text(
                 "/",
                 style: TextStyle(
@@ -162,7 +173,7 @@ class _UIState extends State<UI> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             RaisedButton(
-              onPressed: () => pressOne('7'),
+              onPressed: () => buttonPressed('7'),
               child: const Text(
                 "7",
                 style: TextStyle(
@@ -175,7 +186,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () => pressOne('8'),
+              onPressed: () => buttonPressed('8'),
               child: const Text(
                 "8",
                 style: TextStyle(
@@ -188,7 +199,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () => pressOne('9'),
+              onPressed: () => buttonPressed('9'),
               child: const Text(
                 "9",
                 style: TextStyle(
@@ -201,7 +212,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () {},
+              onPressed: () => buttonPressed("x"),
               child: const Text(
                 "x",
                 style: TextStyle(
@@ -223,7 +234,7 @@ class _UIState extends State<UI> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             RaisedButton(
-              onPressed: () => pressOne('4'),
+              onPressed: () => buttonPressed('4'),
               child: const Text(
                 "4",
                 style: TextStyle(
@@ -236,7 +247,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () => pressOne('5'),
+              onPressed: () => buttonPressed('5'),
               child: const Text(
                 "5",
                 style: TextStyle(
@@ -249,7 +260,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () => pressOne('6'),
+              onPressed: () => buttonPressed('6'),
               child: const Text(
                 "6",
                 style: TextStyle(
@@ -262,7 +273,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () {},
+              onPressed: () => buttonPressed('-'),
               child: const Text(
                 "-",
                 style: TextStyle(
@@ -284,7 +295,7 @@ class _UIState extends State<UI> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             RaisedButton(
-              onPressed: () => pressOne('1'),
+              onPressed: () => buttonPressed('1'),
               child: const Text(
                 "1",
                 style: TextStyle(
@@ -297,7 +308,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () => pressOne('2'),
+              onPressed: () => buttonPressed('2'),
               child: const Text(
                 "2",
                 style: TextStyle(
@@ -310,7 +321,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () => pressOne('3'),
+              onPressed: () => buttonPressed('3'),
               child: const Text(
                 "3",
                 style: TextStyle(
@@ -323,7 +334,7 @@ class _UIState extends State<UI> {
               padding: const EdgeInsets.all(20),
             ),
             RaisedButton(
-              onPressed: () => pressOne("+"),
+              onPressed: () => buttonPressed("+"),
               child: const Text(
                 "+",
                 style: TextStyle(
@@ -344,7 +355,7 @@ class _UIState extends State<UI> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           RaisedButton(
             padding: const EdgeInsets.fromLTRB(34, 20, 128, 20),
-            onPressed: () => pressOne('0'),
+            onPressed: () => buttonPressed('0'),
             child: const Text(
               "0",
               style: TextStyle(
@@ -356,7 +367,7 @@ class _UIState extends State<UI> {
             color: Colors.grey[850],
           ),
           RaisedButton(
-            onPressed: () => pressOne('.'),
+            onPressed: () => buttonPressed('.'),
             child: const Text(
               ".",
               style: TextStyle(
@@ -369,8 +380,7 @@ class _UIState extends State<UI> {
             padding: const EdgeInsets.all(20),
           ),
           RaisedButton(
-            onPressed: () {},
-            // => add(),
+            onPressed: () => buttonPressed('='),
             child: const Text(
               "=",
               style: TextStyle(
