@@ -37,12 +37,22 @@ class UI extends StatefulWidget {
 class _UIState extends State<UI> {
   // calculator logic
 
-  String result = "0";
-  String value = "0";
+  String result = "";
+  String value = "";
   String expression = "";
 
   buttonPressed(String buttonText) {
     if (value.length > 8) return;
+    if (buttonText == "x" && value.isEmpty) return;
+    if (buttonText == "-" && value.isEmpty) return;
+    if (buttonText == "/" && value.isEmpty) return;
+    if (buttonText == "+" && value.isEmpty) return;
+
+    // else if (buttonText == "%" && value.contains("%")) {
+    //     value = value + "%";
+    //     result = value * 2;
+    //   }
+
     setState(() {
       if (buttonText == "." && value.contains(".")) {
         // do nothing
@@ -58,6 +68,12 @@ class _UIState extends State<UI> {
         } catch (e) {
           result = "Error";
         }
+      } else if (buttonText == "+/-") {
+        if (value[0] != "-") {
+          result = "-" + value;
+        } else {
+          result = value.substring(1);
+        }
       } else {
         if (value == "0" && buttonText != ".") {
           value = buttonText;
@@ -69,15 +85,15 @@ class _UIState extends State<UI> {
   }
 
   void ac() => setState(() {
-        value = "0";
-        result = "0";
+        value = "";
+        result = "";
       });
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Column(
+        Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Padding(
@@ -91,17 +107,21 @@ class _UIState extends State<UI> {
                     color: Colors.white,
                   ),
                 )),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
             Padding(
                 padding: const EdgeInsets.only(right: 30),
                 child: Text(
-                  result,
+                  (result).toString(),
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                     fontSize: 60,
-                    // fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
-                ))
+                )),
           ],
         ),
         const SizedBox(
