@@ -40,22 +40,23 @@ class _UIState extends State<UI> {
   String result = "";
   String value = "";
   String expression = "";
+  String percent = "%";
 
   buttonPressed(String buttonText) {
-    if (value.length > 8) return;
+    if (value.length > 9) return;
     if (buttonText == "x" && value.isEmpty) return;
     if (buttonText == "-" && value.isEmpty) return;
     if (buttonText == "/" && value.isEmpty) return;
     if (buttonText == "+" && value.isEmpty) return;
-
-    // else if (buttonText == "%" && value.contains("%")) {
-    //     value = value + "%";
-    //     result = value * 2;
-    //   }
+    if (buttonText == "%" && value.isEmpty) return;
 
     setState(() {
-      if (buttonText == "." && value.contains(".")) {
+      if (buttonText == "." && value.contains(".") ||
+          buttonText == "%" && value.contains("%")) {
         // do nothing
+      } else if (buttonText == "%" || value.contains("%")) {
+        value = value + percent;
+        result = buttonText * 2;
       } else if (buttonText == "=") {
         expression = value;
         expression = expression.replaceAll("x", "*");
@@ -70,7 +71,7 @@ class _UIState extends State<UI> {
         }
       } else if (buttonText == "+/-") {
         if (value[0] != "-") {
-          result = "-" + value;
+          value = "-" + value;
         } else {
           result = value.substring(1);
         }
